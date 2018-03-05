@@ -4,5 +4,6 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  api: 'http://82.81.136.140/DevSignaturesFlowAPI/api/GetUsers'
 };

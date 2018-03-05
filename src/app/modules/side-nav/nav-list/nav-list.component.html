@@ -1,0 +1,7 @@
+<mat-list role="list">
+  <ng-container *ngFor="let link of linkslist">
+    <mat-list-item role="listitem">
+      <a [routerLink]="[link.path]">{{link.name}}</a>
+    </mat-list-item>
+  </ng-container>
+</mat-list>

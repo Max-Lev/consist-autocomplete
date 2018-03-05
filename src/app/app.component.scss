@@ -1,0 +1,17 @@
+:host {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    align-content: space-around;
+    justify-content: space-around;
+    .left,
+    .right {
+        border: 1px solid;
+        display: flex;
+        flex-direction: row;
+        flex: 1;
+    }
+    .right {
+        flex: .3;
+    }
+}
