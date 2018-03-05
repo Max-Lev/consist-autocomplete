@@ -12,7 +12,7 @@ import { GetUsersService } from '../services/get-users.service';
   templateUrl: './search-users.component.html',
   styleUrls: ['./search-users.component.scss']
 })
-export class SearchUsersComponent implements OnInit {
+export class SearchUsersComponent implements OnInit, AfterViewInit {
 
   // @ViewChild('auto') auto: MatAutocomplete;
 
@@ -22,62 +22,59 @@ export class SearchUsersComponent implements OnInit {
 
   myControl: FormControl = new FormControl();
 
-  filteredOptions: Array<User> = [];
+  // filteredOptions: Observable<string[]>;
+  // filteredOptions: Observable<User[] | string[]>;
+  filteredOptions: Array<User> | Array<string> | Array<any>;
+  // filteredOptions: Observable<Array<User> | Array<string> | Array<any>>;
 
-  option: Array<User> = [];
+  // option: Array<User> | Array<string> | Array<any> = [];
+
+  options = [];
 
   constructor(private getUsersService: GetUsersService, private ref: ChangeDetectorRef) { };
 
-  ngOnInit(): void {
-
-    //this.filteredOptions = 
-    this.myControl.valueChanges.pipe(startWith(''), map((val) => {
-      debugger;
-      this.searchFilter(val)
-    }));
-  };
-
-  ngAfterViewInit(): void {
-    // this.searchDataChange();
-    this.getUsers();
-  };
-
-  inputFocus() {
-
-    // this.myControl.registerOnChange(() => { console.log('change'); });
-    // this.myControl.statusChanges.subscribe((data) => { console.log(data); });
-    this.triggerAutoCompletePanel.openPanel();
-    this.ref.detectChanges();
-  };
-
-  getUsers() {
-    this.getUsersService.getUsers().subscribe((users: [User]) => {
-      console.log(users);
-      this.filteredOptions = users;
-      this.option = users;
+  ngOnInit() {
+    // this.filteredOptions = this.myControl.valueChanges
+    //   .pipe(
+    //     startWith(''),
+    //     map(val => this.filter(val))
+    //   );
+    this.myControl.valueChanges.subscribe((val) => {
+      const usersList: Array<User> | Array<string> | Array<any> = this.filter(val);
+      this.filteredOptions = [...usersList].map(item => item.FullName);
       this.ref.detectChanges();
     });
   };
 
-  // searchDataChange() {
-  //   this.myControl.valueChanges.subscribe((data) => {
-  //     console.log(data);
-  //   });
-  // };
-
-  searchFilter(val: string): User[] {
-    debugger;
-    // const result = this.option.filter(option => option.FullName.toLowerCase().indexOf(val.toLowerCase()) === 0);
-    const result = this.option.filter((option) => {
-      debugger;
-      option.FullName.toLowerCase().indexOf(val.toLowerCase()) === 0
-    });
-    debugger;
-    return result;
+  ngAfterViewInit(): void {
+    this.getUsers();
   };
-  // searchFilter(val: string): string[] {
-  //   return this.options.filter(option => option.toLowerCase().indexOf(val.toLowerCase()) === 0);
-  // };
+
+  filter(val: string): Array<User> | Array<string> | Array<any> {
+    let filteredUsers: User[] = [];
+    this.options.filter((item) => {
+      const keys = Object.keys(item);
+      return keys.find((key) => {
+        if (item[key].toLowerCase().indexOf(val.toLocaleLowerCase()) === 0) {
+          console.log(item);
+          filteredUsers.push(item);
+          return item;
+        }
+      });
+    });
+    return filteredUsers;
+  };
+
+
+  getUsers(): void {
+    this.getUsersService.getUsers().subscribe((users: [User]) => {
+      this.filteredOptions = users.map(item => item.FullName);
+      this.options = users;
+      this.ref.detectChanges();
+    });
+  };
+
+
 
 
 }
