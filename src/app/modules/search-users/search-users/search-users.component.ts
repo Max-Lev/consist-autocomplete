@@ -14,45 +14,36 @@ import { GetUsersService } from '../services/get-users.service';
 })
 export class SearchUsersComponent implements OnInit, AfterViewInit {
 
-  // @ViewChild('auto') auto: MatAutocomplete;
-
   @ViewChild('searchinput') searchinput: MatInput;
 
   @ViewChild(MatAutocompleteTrigger) triggerAutoCompletePanel: MatAutocompleteTrigger;
 
-  myControl: FormControl = new FormControl();
+  usersControl: FormControl = new FormControl();
 
-  // filteredOptions: Observable<string[]>;
-  // filteredOptions: Observable<User[] | string[]>;
-  filteredOptions: Array<User> | Array<string> | Array<any>;
-  // filteredOptions: Observable<Array<User> | Array<string> | Array<any>>;
+  filteredOptions: Array<string>;
 
-  // option: Array<User> | Array<string> | Array<any> = [];
-
-  options = [];
+  panelOptionsResults = [];
 
   constructor(private getUsersService: GetUsersService, private ref: ChangeDetectorRef) { };
 
-  ngOnInit() {
-    // this.filteredOptions = this.myControl.valueChanges
-    //   .pipe(
-    //     startWith(''),
-    //     map(val => this.filter(val))
-    //   );
-    this.myControl.valueChanges.subscribe((val) => {
-      const usersList: Array<User> | Array<string> | Array<any> = this.filter(val);
-      this.filteredOptions = [...usersList].map(item => item.FullName);
+  ngOnInit() { };
+
+  ngAfterViewInit(): void {
+    this.getUsers();
+    this.filteredUsers();
+  };
+
+  filteredUsers() {
+    this.usersControl.valueChanges.subscribe((val) => {
+      const usersList: Array<User> = this.filterUsersListByProps(val);
+      this.filteredOptions = usersList.map(item => item.FullName);
       this.ref.detectChanges();
     });
   };
 
-  ngAfterViewInit(): void {
-    this.getUsers();
-  };
-
-  filter(val: string): Array<User> | Array<string> | Array<any> {
+  filterUsersListByProps(val: string): Array<User> {
     let filteredUsers: User[] = [];
-    this.options.filter((item) => {
+    this.panelOptionsResults.filter((item) => {
       const keys = Object.keys(item);
       return keys.find((key) => {
         if (item[key].toLowerCase().indexOf(val.toLocaleLowerCase()) === 0) {
@@ -69,7 +60,7 @@ export class SearchUsersComponent implements OnInit, AfterViewInit {
   getUsers(): void {
     this.getUsersService.getUsers().subscribe((users: [User]) => {
       this.filteredOptions = users.map(item => item.FullName);
-      this.options = users;
+      this.panelOptionsResults = users;
       this.ref.detectChanges();
     });
   };
