@@ -1,15 +1,15 @@
 <form class="example-form">
   <mat-form-field class="example-full-width">
-    <input #searchinput  type="text" placeholder="Pick one" aria-label="Number" matInput (mousedown)="inputFocus()" [formControl]="myControl"
+    <input #searchinput  type="text" placeholder="Pick one" aria-label="Number" matInput  [formControl]="myControl"
       [matAutocomplete]="auto">
     <mat-autocomplete #auto="matAutocomplete">
-      <!-- <mat-option *ngFor="let option of filteredOptions | async" [value]="option"> -->
       <mat-option *ngFor="let option of filteredOptions" [value]="option">
-        {{ option.FullName }}
+      <!-- <mat-option *ngFor="let option of filteredOptions" [value]="option"> -->
+        {{ option }}
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>
 </form>
 
-<!-- filteredOptions:{{filteredOptions | json}}
-<br> option: {{option}} -->
+filteredOptions:{{filteredOptions}}
+<br> option: {{option}}
