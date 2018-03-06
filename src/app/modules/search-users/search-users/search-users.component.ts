@@ -8,6 +8,7 @@ import { User } from '../../../models/users';
 import { GetUsersService } from '../services/get-users.service';
 import { FilterUsersService } from '../services/filter-users.service';
 import { Subscription } from 'rxjs/Subscription';
+import { SearchStorageService } from '../services/search-storage.service';
 @Component({
   selector: 'app-search-users',
   templateUrl: './search-users.component.html',
@@ -36,6 +37,7 @@ export class SearchUsersComponent implements OnInit, AfterViewInit, OnDestroy {
   selectedUser: User;
 
   constructor(private getUsersService: GetUsersService,
+    private searchStorageService: SearchStorageService,
     private filterUsersService: FilterUsersService,
     private ref: ChangeDetectorRef) { };
 
@@ -47,35 +49,29 @@ export class SearchUsersComponent implements OnInit, AfterViewInit, OnDestroy {
     this.filteredUsers();
   };
 
-  selectedOption(option: User) {
-    console.log('selectedOption: ', option);
-    this.selectedUser = option;
-  };
-
-  submit(adduser: boolean) {
-    debugger;
-    // && this.selectedUser !== undefined
-    console.log('submit: ', adduser);
+  submit(adduser?: boolean) {
     if (this.usersControl.valid) {
-      this.usersControl;
+      if (this.usersControl.value.hasOwnProperty(this.displayProp)) {
+        this.selectedUser = this.usersControl.value;
+        this.selectedUser.IsSelected = true;
+        this.searchStorageService.setSelectedUserStore(this.selectedUser);
+      }
     }
   };
 
   showPanelSearchOptions() {
-    // debugger;
     this.triggerAutoCompletePanel.openPanel();
-    //this.filteredOptions = this.filterUsersService.setPanelDisplayProp(this.panelOptionsResults, this.displayProp);
     this.filteredOptions = this.panelOptionsResults;
     this.ref.detectChanges();
   };
 
   filteredUsers() {
     this.subscription = this.usersControl.valueChanges.subscribe((val) => {
-
       let usersList: Array<User> = [];
-      if (val['FullName'] !== undefined) {
-        this.searchinput['nativeElement'].value = val['FullName'];
-        usersList = this.filterUsersService.filterUsersListByProps(val['FullName'], this.panelOptionsResults, this.excludeProp);
+
+      if (val[this.displayProp] !== undefined) {
+        this.searchinput['nativeElement'].value = val[this.displayProp];
+        usersList = this.filterUsersService.filterUsersListByProps(val[this.displayProp], this.panelOptionsResults, this.excludeProp);
         this.filteredOptions = usersList;
         this.ref.detectChanges();
       }
@@ -85,7 +81,6 @@ export class SearchUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.filteredOptions = usersList;
         this.ref.detectChanges();
       }
-
     });
     // this.usersControl.statusChanges.subscribe((data) => {
     //   console.log(data);
