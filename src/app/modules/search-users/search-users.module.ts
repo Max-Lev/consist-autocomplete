@@ -11,6 +11,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { FilterUsersService } from './services/filter-users.service';
 import { AddUserComponent } from './add-user/add-user.component';
 import { CutSearchDirective } from './directives/cut-search.directive';
+import { SearchStorageService } from './services/search-storage.service';
+
 const routes: Routes = [
   {
     path: '', component: SearchUsersComponent
@@ -30,8 +32,13 @@ const routes: Routes = [
   ],
   providers: [
     GetUsersService,
-    FilterUsersService
+    FilterUsersService,
+    SearchStorageService
   ],
-  declarations: [SearchUsersComponent, AddUserComponent, CutSearchDirective]
+  declarations: [
+    SearchUsersComponent,
+    AddUserComponent,
+    CutSearchDirective
+  ]
 })
 export class SearchUsersModule { }
