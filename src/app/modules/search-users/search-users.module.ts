@@ -9,6 +9,7 @@ import { GetUsersService } from './services/get-users.service';
 import { Routes, RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { FilterUsersService } from './services/filter-users.service';
+import { AddUserComponent } from './add-user/add-user.component';
 const routes: Routes = [
   {
     path: '', component: SearchUsersComponent
@@ -30,6 +31,6 @@ const routes: Routes = [
     GetUsersService,
     FilterUsersService
   ],
-  declarations: [SearchUsersComponent]
+  declarations: [SearchUsersComponent, AddUserComponent]
 })
 export class SearchUsersModule { }

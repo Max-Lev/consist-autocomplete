@@ -1,25 +1,20 @@
 <section class="container">
 
   <section>
-    <form class="example-form">
+    <form class="search-form">
       <mat-form-field class="example-full-width">
-        <input (mousedown)="showPanelSearchOptions()" 
-        #searchinput type="text" placeholder="Select User" aria-label="Number" matInput
+        <input (mousedown)="showPanelSearchOptions()" #searchinput type="text" 
+        placeholder="Select User" aria-label="Number" matInput
           [formControl]="usersControl" [matAutocomplete]="auto">
         <mat-autocomplete #auto="matAutocomplete">
-          <mat-option (click)="selectedOption(option)" *ngFor="let option of filteredOptions" [value]="option">
+          <mat-option 
+          (click)="selectedOption(option)" *ngFor="let option of filteredOptions" [value]="option">
             {{ option }}
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
+      <app-add-user (add)="addUser($event)" [type]="'submit'" [title]="'ADD'"></app-add-user>
     </form>
   </section>
 
-  <section class="btn-wrapper">
-    <button (click)="addUser()" mat-raised-button color="warn">ADD</button>
-  </section>
-
 </section>
-
-<!-- filteredOptions:{{filteredOptions}}
-<br> option: {{panelOptionsResults | json}} -->

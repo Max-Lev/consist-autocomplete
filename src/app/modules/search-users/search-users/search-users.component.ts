@@ -28,8 +28,11 @@ export class SearchUsersComponent implements OnInit, AfterViewInit, OnDestroy {
   usersControl: FormControl = new FormControl();
 
   filteredOptions: Array<string>;
+  // filteredOptions: Array<User>;
 
   panelOptionsResults: Array<User> = [];
+
+  favoriteUsers: Array<User> = [];
 
   constructor(private getUsersService: GetUsersService,
     private filterUsersService: FilterUsersService,
@@ -46,23 +49,33 @@ export class SearchUsersComponent implements OnInit, AfterViewInit, OnDestroy {
   };
 
   selectedOption(option: User) {
-    console.log(option);
+    console.log('selectedOption: ', option);
+    console.log(this.searchinput);
+  };
+  mselectedOption(option: User) {
+    debugger;
+    console.log('mselectedOption: ', option);
   };
 
-  addUser() {
-
+  addUser(adduser: boolean) {
+    this.usersControl;
+    debugger;
   };
 
   showPanelSearchOptions() {
     this.triggerAutoCompletePanel.openPanel();
     this.filteredOptions = this.filterUsersService.setPanelDisplayProp(this.panelOptionsResults, this.displayProp);
+    // this.filteredOptions = this.panelOptionsResults;
     this.ref.detectChanges();
   };
 
   filteredUsers() {
     this.subscription = this.usersControl.valueChanges.subscribe((val) => {
+      debugger;
+      //const usersList: Array<User> = val;
       const usersList: Array<User> = this.filterUsersService.filterUsersListByProps(val, this.panelOptionsResults, this.excludeProp);
       this.filteredOptions = this.filterUsersService.setPanelDisplayProp(usersList, this.displayProp);
+      // this.filteredOptions = usersList;
       this.ref.detectChanges();
     });
   };
@@ -70,6 +83,7 @@ export class SearchUsersComponent implements OnInit, AfterViewInit, OnDestroy {
   getUsers(): void {
     this.subscription = this.getUsersService.getUsers().subscribe((users: [User]) => {
       this.filteredOptions = this.filterUsersService.setPanelDisplayProp(users, this.displayProp);
+      // this.filteredOptions = users;
       this.panelOptionsResults = users;
       this.ref.detectChanges();
     });
