@@ -7,7 +7,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { GetUsersService } from './services/get-users.service';
 import { Routes, RouterModule } from '@angular/router';
-
+import { MatSelectModule } from '@angular/material/select';
 const routes: Routes = [
   {
     path: '', component: SearchUsersComponent
@@ -22,6 +22,7 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    MatSelectModule,
     RouterModule.forChild(routes)
   ],
   providers: [

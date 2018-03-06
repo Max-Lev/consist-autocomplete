@@ -20,7 +20,8 @@ export class SearchUsersComponent implements OnInit, AfterViewInit {
 
   usersControl: FormControl = new FormControl();
 
-  filteredOptions: Array<string>;
+  // filteredOptions: Array<string>;
+  filteredOptions: Array<User>;
 
   panelOptionsResults = [];
 
@@ -30,13 +31,14 @@ export class SearchUsersComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.getUsers();
-    this.filteredUsers();
+    //this.filteredUsers();
   };
 
   filteredUsers() {
     this.usersControl.valueChanges.subscribe((val) => {
       const usersList: Array<User> = this.filterUsersListByProps(val);
-      this.filteredOptions = usersList.map(item => item.FullName);
+      // this.filteredOptions = usersList.map(item => item.FullName);
+      this.filteredOptions = usersList.map(item => item);
       this.ref.detectChanges();
     });
   };
@@ -44,9 +46,12 @@ export class SearchUsersComponent implements OnInit, AfterViewInit {
   filterUsersListByProps(val: string): Array<User> {
     let filteredUsers: User[] = [];
     this.panelOptionsResults.filter((item) => {
+
       const keys = Object.keys(item);
       return keys.find((key) => {
         if (item[key].toLowerCase().indexOf(val.toLocaleLowerCase()) === 0) {
+          // if (item[key].toLowerCase().indexOf(val[0].toLocaleLowerCase()) === 0) {
+          // debugger;
           console.log(item);
           filteredUsers.push(item);
           return item;
@@ -56,10 +61,17 @@ export class SearchUsersComponent implements OnInit, AfterViewInit {
     return filteredUsers;
   };
 
+  selectedOption(option: User) {
+    debugger;
+    console.log(option);
+    this.usersControl.setValue(option.FullName);
+    this.triggerAutoCompletePanel.openPanel();
+  };
 
   getUsers(): void {
     this.getUsersService.getUsers().subscribe((users: [User]) => {
-      this.filteredOptions = users.map(item => item.FullName);
+      // this.filteredOptions = users.map(item => item.FullName);
+      this.filteredOptions = users.map(item => item);
       this.panelOptionsResults = users;
       this.ref.detectChanges();
     });

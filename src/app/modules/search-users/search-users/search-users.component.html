@@ -1,13 +1,19 @@
 <form class="example-form">
   <mat-form-field class="example-full-width">
-    <input #searchinput  type="text" placeholder="Pick one" aria-label="Number" matInput  [formControl]="usersControl"
-      [matAutocomplete]="auto">
+    <input #searchinput type="text" placeholder="Select User" aria-label="Number" 
+    matInput [formControl]="usersControl" [matAutocomplete]="auto">
     <mat-autocomplete #auto="matAutocomplete">
-      <mat-option *ngFor="let option of filteredOptions" [value]="option">
-      <!-- <mat-option *ngFor="let option of filteredOptions" [value]="option"> -->
-        {{ option }}
+      <mat-option (click)="selectedOption(option)" *ngFor="let option of filteredOptions" [value]="option">
+        {{ option.FullName }}
       </mat-option>
     </mat-autocomplete>
+
+    <!-- <mat-select placeholder="Select User" [formControl]="usersControl" multiple>
+      <mat-option *ngFor="let option of filteredOptions" [value]="option">
+        {{ option }}
+      </mat-option>
+    </mat-select> -->
+
   </mat-form-field>
 </form>
 
