@@ -10,6 +10,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { FilterUsersService } from './services/filter-users.service';
 import { AddUserComponent } from './add-user/add-user.component';
+import { CutSearchDirective } from './directives/cut-search.directive';
 const routes: Routes = [
   {
     path: '', component: SearchUsersComponent
@@ -31,6 +32,6 @@ const routes: Routes = [
     GetUsersService,
     FilterUsersService
   ],
-  declarations: [SearchUsersComponent, AddUserComponent]
+  declarations: [SearchUsersComponent, AddUserComponent, CutSearchDirective]
 })
 export class SearchUsersModule { }

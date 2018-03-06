@@ -18,8 +18,6 @@ export class AddUserComponent implements OnInit {
 
   ngOnInit() { };
 
-  addUser() {
-    this.add.emit(true);
-  };
+  addUser() { this.add.emit(true); };
 
 }

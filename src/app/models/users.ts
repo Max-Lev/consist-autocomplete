@@ -10,6 +10,7 @@ export class User {
     Email: string;
     Title: string;
     FullName: string;
+    isSelected?: boolean;
     constructor(user: IUser) {
         this.Name = user.UserName;
         this.FullName = user.Name;

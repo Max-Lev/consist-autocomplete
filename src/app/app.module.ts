@@ -7,6 +7,7 @@ import { SideNavModule } from './modules/side-nav/side-nav.module';
 import { NavModule } from './modules/nav/nav.module';
 import { HomeComponent } from './home/home.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 @NgModule({
   declarations: [
     AppComponent,

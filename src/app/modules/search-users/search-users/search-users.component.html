@@ -3,17 +3,15 @@
   <section>
     <form class="search-form">
       <mat-form-field class="example-full-width">
-        <input (mousedown)="showPanelSearchOptions()" #searchinput type="text" 
-        placeholder="Select User" aria-label="Number" matInput
+        <input cut (mousedown)="showPanelSearchOptions()" #searchinput type="text" placeholder="Select User" aria-label="Number" matInput
           [formControl]="usersControl" [matAutocomplete]="auto">
         <mat-autocomplete #auto="matAutocomplete">
-          <mat-option 
-          (click)="selectedOption(option)" *ngFor="let option of filteredOptions" [value]="option">
-            {{ option }}
+          <mat-option (click)="selectedOption(option)" *ngFor="let option of filteredOptions" [value]="option">
+            {{ option.FullName }}
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
-      <app-add-user (add)="addUser($event)" [type]="'submit'" [title]="'ADD'"></app-add-user>
+      <app-add-user (add)="submit($event)" [type]="'submit'" [title]="'ADD'"></app-add-user>
     </form>
   </section>
 
