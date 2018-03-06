@@ -7,7 +7,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { GetUsersService } from './services/get-users.service';
 import { Routes, RouterModule } from '@angular/router';
-
+import { MatButtonModule } from '@angular/material/button';
+import { FilterUsersService } from './services/filter-users.service';
 const routes: Routes = [
   {
     path: '', component: SearchUsersComponent
@@ -22,10 +23,12 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    MatButtonModule,
     RouterModule.forChild(routes)
   ],
   providers: [
-    GetUsersService
+    GetUsersService,
+    FilterUsersService
   ],
   declarations: [SearchUsersComponent]
 })
