@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewChild, OnDestroy } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { startWith } from 'rxjs/operators/startWith';
 import { MatAutocomplete, MatAutocompleteTrigger } from '@angular/material/autocomplete';
@@ -25,22 +25,21 @@ export class SearchUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild(MatAutocompleteTrigger) triggerAutoCompletePanel: MatAutocompleteTrigger;
 
-  usersControl: FormControl = new FormControl();
+  usersControl: FormControl = new FormControl(null, { validators: [Validators.required] });
 
-  filteredOptions: Array<string>;
-  // filteredOptions: Array<User>;
+  filteredOptions: Array<User | string>;
 
   panelOptionsResults: Array<User> = [];
 
   favoriteUsers: Array<User> = [];
 
+  selectedUser: User;
+
   constructor(private getUsersService: GetUsersService,
     private filterUsersService: FilterUsersService,
     private ref: ChangeDetectorRef) { };
 
-  ngOnInit() {
-    this.getUsers();
-  };
+  ngOnInit() { this.getUsers(); };
 
   ngOnDestroy(): void { this.subscription.unsubscribe(); };
 
@@ -50,40 +49,53 @@ export class SearchUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
   selectedOption(option: User) {
     console.log('selectedOption: ', option);
-    console.log(this.searchinput);
-  };
-  mselectedOption(option: User) {
-    debugger;
-    console.log('mselectedOption: ', option);
+    this.selectedUser = option;
   };
 
-  addUser(adduser: boolean) {
-    this.usersControl;
+  submit(adduser: boolean) {
     debugger;
+    // && this.selectedUser !== undefined
+    console.log('submit: ', adduser);
+    if (this.usersControl.valid) {
+      this.usersControl;
+    }
   };
 
   showPanelSearchOptions() {
+    // debugger;
     this.triggerAutoCompletePanel.openPanel();
-    this.filteredOptions = this.filterUsersService.setPanelDisplayProp(this.panelOptionsResults, this.displayProp);
-    // this.filteredOptions = this.panelOptionsResults;
+    //this.filteredOptions = this.filterUsersService.setPanelDisplayProp(this.panelOptionsResults, this.displayProp);
+    this.filteredOptions = this.panelOptionsResults;
     this.ref.detectChanges();
   };
 
   filteredUsers() {
     this.subscription = this.usersControl.valueChanges.subscribe((val) => {
-      debugger;
-      //const usersList: Array<User> = val;
-      const usersList: Array<User> = this.filterUsersService.filterUsersListByProps(val, this.panelOptionsResults, this.excludeProp);
-      this.filteredOptions = this.filterUsersService.setPanelDisplayProp(usersList, this.displayProp);
-      // this.filteredOptions = usersList;
-      this.ref.detectChanges();
+
+      let usersList: Array<User> = [];
+      if (val['FullName'] !== undefined) {
+        this.searchinput['nativeElement'].value = val['FullName'];
+        usersList = this.filterUsersService.filterUsersListByProps(val['FullName'], this.panelOptionsResults, this.excludeProp);
+        this.filteredOptions = usersList;
+        this.ref.detectChanges();
+      }
+      else {
+        this.searchinput['nativeElement'].value = val;
+        usersList = this.filterUsersService.filterUsersListByProps(val, this.panelOptionsResults, this.excludeProp);
+        this.filteredOptions = usersList;
+        this.ref.detectChanges();
+      }
+
     });
+    // this.usersControl.statusChanges.subscribe((data) => {
+    //   console.log(data);
+    // });
   };
 
   getUsers(): void {
     this.subscription = this.getUsersService.getUsers().subscribe((users: [User]) => {
-      this.filteredOptions = this.filterUsersService.setPanelDisplayProp(users, this.displayProp);
-      // this.filteredOptions = users;
+      //this.filteredOptions = this.filterUsersService.setPanelDisplayProp(users, this.displayProp);
+      this.filteredOptions = users;
       this.panelOptionsResults = users;
       this.ref.detectChanges();
     });
