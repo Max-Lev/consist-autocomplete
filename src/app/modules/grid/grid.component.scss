@@ -1,0 +1,38 @@
+.wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    .name,
+    .title,
+    .email {
+        padding: 1rem;
+        border: 1px solid rgba(0, 0, 0, .42);
+        display: flex;
+        flex: 1;
+    }
+}
+
+.user-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    .user-name,
+    .user-title,
+    .user-email {
+        padding: 1rem;
+        border: 1px solid rgba(0, 0, 0, .42);
+        display: flex;
+        flex: 1;
+    }
+}
+
+.no-border-left {
+    border-left: none !important;
+}
+
+.no-border-right {
+    border-right: none !important;
+}
+.no-border-bottom { 
+    border-bottom: none !important;
+}

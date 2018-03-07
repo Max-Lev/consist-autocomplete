@@ -15,6 +15,7 @@ import { SearchStorageService } from './services/search-storage.service';
 import { MatDialogModule } from '@angular/material/dialog';
 import { DialogComponent } from './dialog/dialog.component';
 import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material';
+import { SharedModule } from '../../shared/shared.module';
 const routes: Routes = [
   {
     path: '', component: SearchUsersComponent
@@ -31,7 +32,8 @@ const routes: Routes = [
     HttpClientModule,
     MatButtonModule,
     MatDialogModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    SharedModule
   ],
   providers: [
     GetUsersService,
