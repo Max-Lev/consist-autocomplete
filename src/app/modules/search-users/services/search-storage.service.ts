@@ -11,10 +11,10 @@ export class SearchStorageService {
   list$: Subject<User> = new Subject();
 
   constructor() {
-    this.setStorage();
+    this.get_LocalStorage();
   };
 
-  setStorage() {
+  get_LocalStorage() {
     if (localStorage.length > 0) {
       const keys = Object.keys(localStorage);
       keys.map(item => { this.listMap.set(item, JSON.parse(localStorage.getItem(item))); });
@@ -22,7 +22,7 @@ export class SearchStorageService {
     }
   };
 
-  setSelectedUserStore(selectedUser: User) {
+  set_SelectedUser_Storage(selectedUser: User) {
 
     if (this.listMap.size < 5) {
       this._setInMemoryMap(selectedUser);
@@ -30,10 +30,12 @@ export class SearchStorageService {
     } else {
       const list: Array<User> = [];
       this.listMap.forEach(item => list.push(item));
+      list[0].IsSelected = false;
       this.listMap.delete(list[0].FullName);
       this._setInMemoryMap(selectedUser);
       localStorage.clear();
       this.listMap.forEach(item => localStorage.setItem(item.FullName, JSON.stringify(item)));
+      this.list$.next(selectedUser);
     }
 
   };
