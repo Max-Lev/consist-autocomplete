@@ -26,7 +26,8 @@ export class SearchStorageService {
 
     if (this.listMap.size < 5) {
       this._setInMemoryMap(selectedUser);
-      localStorage.setItem(selectedUser.FullName, JSON.stringify(selectedUser))
+      localStorage.setItem(selectedUser.FullName, JSON.stringify(selectedUser));
+      this.list$.next(selectedUser);
     } else {
       const list: Array<User> = [];
       this.listMap.forEach(item => list.push(item));
@@ -39,6 +40,7 @@ export class SearchStorageService {
     }
 
   };
+
 
   _setInMemoryMap(selectedUser: User) {
     this.listMap.set(selectedUser.FullName, selectedUser);
