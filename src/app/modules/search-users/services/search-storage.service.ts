@@ -1,3 +1,4 @@
+import { Subject } from 'rxjs/Subject';
 import { map } from 'rxjs/operators/map';
 import { Injectable } from '@angular/core';
 import { User } from '../../../models/users';
@@ -7,6 +8,8 @@ export class SearchStorageService {
 
   listMap: Map<string, User> = new Map();
 
+  list$: Subject<User> = new Subject();
+
   constructor() {
     this.setStorage();
   };
@@ -14,7 +17,8 @@ export class SearchStorageService {
   setStorage() {
     if (localStorage.length > 0) {
       const keys = Object.keys(localStorage);
-      const items = keys.map(item => { this.listMap.set(item, JSON.parse(localStorage.getItem(item))); });
+      keys.map(item => { this.listMap.set(item, JSON.parse(localStorage.getItem(item))); });
+      setTimeout(() => { this.listMap.forEach(item => this.list$.next(item)); }, 1000);
     }
   };
 
