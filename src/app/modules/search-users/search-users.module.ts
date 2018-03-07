@@ -12,7 +12,9 @@ import { FilterUsersService } from './services/filter-users.service';
 import { AddUserComponent } from './add-user/add-user.component';
 import { CutSearchDirective } from './directives/cut-search.directive';
 import { SearchStorageService } from './services/search-storage.service';
-
+import { MatDialogModule } from '@angular/material/dialog';
+import { DialogComponent } from './dialog/dialog.component';
+import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material';
 const routes: Routes = [
   {
     path: '', component: SearchUsersComponent
@@ -28,17 +30,23 @@ const routes: Routes = [
     ReactiveFormsModule,
     HttpClientModule,
     MatButtonModule,
+    MatDialogModule,
     RouterModule.forChild(routes)
   ],
   providers: [
     GetUsersService,
     FilterUsersService,
-    SearchStorageService
+    SearchStorageService,
+    { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: true } },
+  ],
+  entryComponents: [
+    DialogComponent
   ],
   declarations: [
     SearchUsersComponent,
     AddUserComponent,
-    CutSearchDirective
+    CutSearchDirective,
+    DialogComponent
   ]
 })
 export class SearchUsersModule { }

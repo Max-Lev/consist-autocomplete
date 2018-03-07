@@ -9,6 +9,8 @@ import { GetUsersService } from '../services/get-users.service';
 import { FilterUsersService } from '../services/filter-users.service';
 import { Subscription } from 'rxjs/Subscription';
 import { SearchStorageService } from '../services/search-storage.service';
+import { MatDialog, MAT_DIALOG_DATA } from '@angular/material';
+
 @Component({
   selector: 'app-search-users',
   templateUrl: './search-users.component.html',
@@ -36,9 +38,8 @@ export class SearchUsersComponent implements OnInit, AfterViewInit, OnDestroy, A
 
   selectedUser: User;
 
-  constructor(private getUsersService: GetUsersService,
-    private searchStorageService: SearchStorageService,
-    private filterUsersService: FilterUsersService,
+  constructor(private getUsersService: GetUsersService, private searchStorageService: SearchStorageService,
+    private filterUsersService: FilterUsersService, public dialog: MatDialog,
     private ref: ChangeDetectorRef) {
   };
 
@@ -62,8 +63,9 @@ export class SearchUsersComponent implements OnInit, AfterViewInit, OnDestroy, A
           this.searchStorageService.set_SelectedUser_Storage(this.selectedUser);
           this.ref.detectChanges();
         }
-      }
+      } else { this.openDialog(); }
     }
+    else { this.openDialog(); }
   };
 
   showPanelSearchOptions() {
@@ -129,6 +131,9 @@ export class SearchUsersComponent implements OnInit, AfterViewInit, OnDestroy, A
     });
   };
 
+  openDialog() {
+    this.dialog.open(DialogComponent, { data: { title: 'Please, Select an User!' } });
+  };
 
 
 
