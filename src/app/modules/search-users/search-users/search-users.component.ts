@@ -57,9 +57,11 @@ export class SearchUsersComponent implements OnInit, AfterViewInit, OnDestroy, A
     if (this.usersControl.valid) {
       if (this.usersControl.value.hasOwnProperty(this.displayProp)) {
         this.selectedUser = this.usersControl.value;
-        this.selectedUser.IsSelected = true;
-        this.searchStorageService.set_SelectedUser_Storage(this.selectedUser);
-        // this.searchStorageService.list$.next(this.selectedUser);
+        if (!this.selectedUser.IsSelected) {
+          this.selectedUser.IsSelected = true;
+          this.searchStorageService.set_SelectedUser_Storage(this.selectedUser);
+          this.ref.detectChanges();
+        }
       }
     }
   };
@@ -94,23 +96,28 @@ export class SearchUsersComponent implements OnInit, AfterViewInit, OnDestroy, A
 
   setSelectedUsers() {
     this.subscription = this.searchStorageService.list$.subscribe((savedlist) => {
-      // debugger;
-      console.log(savedlist);
-      this.favoriteUsers.push(savedlist);
-      this.favoriteUsers.map(item => {
-        this.panelOptionsResults.map((option) => {
-          if (option.FullName === item.FullName) {
-            option.IsSelected = item.IsSelected;
-            return item;
-          }
-        });
-      });
-      this.panelOptionsResults.sort((a, b) => {
-        return (a.IsSelected > b.IsSelected) ? -1 : 1;
-      });
-
-      console.log(this.panelOptionsResults);
+      this._resetSelectedUI();
+      this._setSelectedUI();
+      this._orderSelectedUI();
     });
+  };
+
+  _resetSelectedUI() {
+    this.panelOptionsResults.map(item => item.IsSelected = false);
+  };
+
+  _setSelectedUI() {
+    this.searchStorageService.listMap.forEach((option) => {
+      this.panelOptionsResults.map((item) => {
+        if (option.FullName === item.FullName) { item.IsSelected = true; return item; }
+      });
+    });
+    this.ref.detectChanges();
+  };
+
+  _orderSelectedUI() {
+    this.panelOptionsResults.sort((a, b) => { return (a.IsSelected > b.IsSelected) ? -1 : 1; });
+    this.ref.detectChanges();
   };
 
   getUsers(): void {
