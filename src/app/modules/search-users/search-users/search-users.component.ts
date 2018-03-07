@@ -46,9 +46,7 @@ export class SearchUsersComponent implements OnInit, AfterViewInit, OnDestroy, A
 
   ngOnDestroy(): void { this.subscription.unsubscribe(); };
 
-  ngAfterContentInit(): void {
-    // this.getSelectedUsers();
-  };
+  ngAfterContentInit(): void { };
 
   ngAfterViewInit(): void {
     this.getUsers();
@@ -60,7 +58,8 @@ export class SearchUsersComponent implements OnInit, AfterViewInit, OnDestroy, A
       if (this.usersControl.value.hasOwnProperty(this.displayProp)) {
         this.selectedUser = this.usersControl.value;
         this.selectedUser.IsSelected = true;
-        this.searchStorageService.setSelectedUserStore(this.selectedUser);
+        this.searchStorageService.set_SelectedUser_Storage(this.selectedUser);
+        // this.searchStorageService.list$.next(this.selectedUser);
       }
     }
   };
@@ -93,8 +92,10 @@ export class SearchUsersComponent implements OnInit, AfterViewInit, OnDestroy, A
     // });
   };
 
-  getSelectedUsers() {
+  setSelectedUsers() {
     this.subscription = this.searchStorageService.list$.subscribe((savedlist) => {
+      // debugger;
+      console.log(savedlist);
       this.favoriteUsers.push(savedlist);
       this.favoriteUsers.map(item => {
         this.panelOptionsResults.map((option) => {
@@ -104,14 +105,9 @@ export class SearchUsersComponent implements OnInit, AfterViewInit, OnDestroy, A
           }
         });
       });
-
-      this.panelOptionsResults
-        .sort((a, b) => {
-          return (a.FullName > b.FullName) ? -1 : 0;
-        })
-        .sort((a, b) => {
-          return (a.IsSelected > b.IsSelected) ? -1 : 0;
-        })
+      this.panelOptionsResults.sort((a, b) => {
+        return (a.IsSelected > b.IsSelected) ? -1 : 1;
+      });
 
       console.log(this.panelOptionsResults);
     });
@@ -121,7 +117,7 @@ export class SearchUsersComponent implements OnInit, AfterViewInit, OnDestroy, A
     this.subscription = this.getUsersService.getUsers().subscribe((users: [User]) => {
       this.filteredOptions = users;
       this.panelOptionsResults = users;
-      this.getSelectedUsers();
+      this.setSelectedUsers();
       this.ref.detectChanges();
     });
   };
