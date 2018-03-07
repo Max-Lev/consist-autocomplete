@@ -16,3 +16,9 @@
     }
 }
 
+.mat-option.selected {
+    border-bottom: 1px solid #f44336;
+    span {
+        border-bottom: 1px solid #f44336;
+    }
+}

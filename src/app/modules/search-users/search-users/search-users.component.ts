@@ -1,3 +1,4 @@
+import { IUser } from './../../../models/users';
 import { Component, OnInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewChild, OnDestroy, AfterContentInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
@@ -10,6 +11,8 @@ import { FilterUsersService } from '../services/filter-users.service';
 import { Subscription } from 'rxjs/Subscription';
 import { SearchStorageService } from '../services/search-storage.service';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material';
+import { DialogComponent } from '../dialog/dialog.component';
+import { SharedService } from '../../../shared/shared.service';
 
 @Component({
   selector: 'app-search-users',
@@ -38,7 +41,9 @@ export class SearchUsersComponent implements OnInit, AfterViewInit, OnDestroy, A
 
   selectedUser: User;
 
-  constructor(private getUsersService: GetUsersService, private searchStorageService: SearchStorageService,
+  constructor(private getUsersService: GetUsersService,
+    private sharedService: SharedService,
+    private searchStorageService: SearchStorageService,
     private filterUsersService: FilterUsersService, public dialog: MatDialog,
     private ref: ChangeDetectorRef) {
   };
@@ -55,15 +60,22 @@ export class SearchUsersComponent implements OnInit, AfterViewInit, OnDestroy, A
   };
 
   submit(adduser?: boolean) {
+
     if (this.usersControl.valid) {
+
       if (this.usersControl.value.hasOwnProperty(this.displayProp)) {
         this.selectedUser = this.usersControl.value;
+
+        this.sharedService.setSelectedUser(this.selectedUser);
+        this.sharedService.isActive$.next(true);
+
         if (!this.selectedUser.IsSelected) {
           this.selectedUser.IsSelected = true;
           this.searchStorageService.set_SelectedUser_Storage(this.selectedUser);
           this.ref.detectChanges();
         }
       } else { this.openDialog(); }
+      this.ref.detectChanges();
     }
     else { this.openDialog(); }
   };
@@ -132,7 +144,12 @@ export class SearchUsersComponent implements OnInit, AfterViewInit, OnDestroy, A
   };
 
   openDialog() {
-    this.dialog.open(DialogComponent, { data: { title: 'Please, Select an User!' } });
+    this.dialog.open(DialogComponent, {
+      data: {
+        title: 'Please select user from the list'
+      }
+    });
+    this.sharedService.isActive$.next(false);
   };
 
 
