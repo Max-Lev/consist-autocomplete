@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewChild, OnDestroy, AfterContentInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { startWith } from 'rxjs/operators/startWith';
@@ -14,7 +14,7 @@ import { SearchStorageService } from '../services/search-storage.service';
   templateUrl: './search-users.component.html',
   styleUrls: ['./search-users.component.scss']
 })
-export class SearchUsersComponent implements OnInit, AfterViewInit, OnDestroy {
+export class SearchUsersComponent implements OnInit, AfterViewInit, OnDestroy, AfterContentInit {
 
   subscription: Subscription;
 
@@ -39,13 +39,19 @@ export class SearchUsersComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(private getUsersService: GetUsersService,
     private searchStorageService: SearchStorageService,
     private filterUsersService: FilterUsersService,
-    private ref: ChangeDetectorRef) { };
+    private ref: ChangeDetectorRef) {
+  };
 
-  ngOnInit() { this.getUsers(); };
+  ngOnInit() { };
 
   ngOnDestroy(): void { this.subscription.unsubscribe(); };
 
+  ngAfterContentInit(): void {
+    // this.getSelectedUsers();
+  };
+
   ngAfterViewInit(): void {
+    this.getUsers();
     this.filteredUsers();
   };
 
@@ -87,11 +93,35 @@ export class SearchUsersComponent implements OnInit, AfterViewInit, OnDestroy {
     // });
   };
 
+  getSelectedUsers() {
+    this.subscription = this.searchStorageService.list$.subscribe((savedlist) => {
+      this.favoriteUsers.push(savedlist);
+      this.favoriteUsers.map(item => {
+        this.panelOptionsResults.map((option) => {
+          if (option.FullName === item.FullName) {
+            option.IsSelected = item.IsSelected;
+            return item;
+          }
+        });
+      });
+
+      this.panelOptionsResults
+        .sort((a, b) => {
+          return (a.FullName > b.FullName) ? -1 : 0;
+        })
+        .sort((a, b) => {
+          return (a.IsSelected > b.IsSelected) ? -1 : 0;
+        })
+
+      console.log(this.panelOptionsResults);
+    });
+  };
+
   getUsers(): void {
     this.subscription = this.getUsersService.getUsers().subscribe((users: [User]) => {
-      //this.filteredOptions = this.filterUsersService.setPanelDisplayProp(users, this.displayProp);
       this.filteredOptions = users;
       this.panelOptionsResults = users;
+      this.getSelectedUsers();
       this.ref.detectChanges();
     });
   };
